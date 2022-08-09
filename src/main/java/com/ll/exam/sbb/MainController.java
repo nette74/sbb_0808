@@ -1,6 +1,7 @@
 package com.ll.exam.sbb;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.catalina.session.StandardSession;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
@@ -149,18 +150,26 @@ public class MainController {
     }
     @GetMapping("/article/{id}")
     @ResponseBody
-    public Article showArticle(@PathVariable int id) throws Exception{
+    public Article showArticle(@PathVariable int id){
 
-        return articles.get(id-1);
+        Article result;
+        try {
+            result=articles.get(id-1);
+        }
+        catch (ArrayIndexOutOfBoundsException e){
+            result =  new Article();
+        }
+        return result;
     }
 }
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 class Article{
-    int id;
-    String title;
-    String body;
+    private int id;
+    private String title;
+    private String body;
 
     Article(String title,String body)
     {
