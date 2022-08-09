@@ -1,5 +1,7 @@
 package com.ll.exam.sbb;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.apache.catalina.session.StandardSession;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.stereotype.Controller;
@@ -7,11 +9,15 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 
 @Controller
 public class MainController {
 
     static int increasenum=0;
+
+
+
     @RequestMapping("/sbb")
     @ResponseBody
     public String index(){
@@ -131,5 +137,34 @@ public class MainController {
         return session.getAttribute("number")+"";
     }
 
+//----------------------------------------------------------------------------------------------------------------------------
 
+    static public ArrayList<Article> articles = new ArrayList<>();
+
+    @GetMapping("/addArticle")
+    @ResponseBody
+    public String addArticle(@RequestParam(defaultValue = "") String title,@RequestParam(defaultValue = "") String body){
+        articles.add(new Article(articles.size()+1,title,body));
+        return "%d번 글이 등록되었습니다.".formatted(articles.size());
+    }
+    @GetMapping("/article/{id}")
+    @ResponseBody
+    public Article showArticle(@PathVariable int id) throws Exception{
+
+        return articles.get(id-1);
+    }
+}
+
+@AllArgsConstructor
+@NoArgsConstructor
+class Article{
+    int id;
+    String title;
+    String body;
+
+    Article(String title,String body)
+    {
+        this.title=title;
+        this.body=body;
+    }
 }
